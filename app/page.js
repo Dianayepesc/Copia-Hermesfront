@@ -1,202 +1,260 @@
-"use client";
-
-import React, { useState } from 'react'; 
-import Link from "next/link";
-import { HiLockClosed } from "react-icons/hi";
-import {faLock,faEye,faEyeSlash,faLink,} from "@fortawesome/free-solid-svg-icons";
-import { BsPersonCircle } from "react-icons/bs";
-import { HiMiniIdentification } from "react-icons/hi2";
+'use client';
 import Image from "next/image";
-//import logoSena from "../public/img/LogoSena.png";
-//import LogoAquiles from "../public/img/LogoAquiles.png";
-import { height } from "@fortawesome/free-solid-svg-icons/fa0";
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import imgMobile1 from "../public/Img/imgMobile1.png";
+import imgMobile2 from "../public/Img/imgMobile2.png";
+import imgMobile3 from "../public/Img/imgMobile3.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FaTwitter, FaTiktok, FaFacebook } from "react-icons/fa";
+import { faCircleCheck, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import Link from "next/link";
+import { Link as ScrollLink } from 'react-scroll';
+import logowhite from "../public/Img/logowhite.png";
+import { Carousel } from 'react-responsive-carousel';
 import logo from "../public/Img/logo.png";
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
 
-export default function Login() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    documentType: '',
-    documentNumber: '',
-    password: ''
-  });
-  const [error, setError] = useState(null); // Añadido estado para errores
-  const router = useRouter();
 
-  const handleOpenModal = () => {
-    setModalOpen(true);
+// Definición de las propiedades que tu componente va a recibir
+const pellet = {
+    size: "medium",
+    color: "red"
+    // Puedes agregar más propiedades según sea necesario
   };
+  
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
+// Definición del componente
+const Bolita = ({ size, color }) => {
+    return (
+      <div style={{ width: size, height: size, margin: '15px 15px 0 15px', backgroundColor: color, borderRadius: 100 }}>
+      </div>
+    );
   };
+  
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
-  const getCsrfToken = async () => {
-    try {
-      const response = await axios.get('/api/csrf-token');
-      return response.data.csrfToken; // Ajusta esto según la estructura de tu respuesta
-    } catch (error) {
-      console.error('Error al obtener el token CSRF:', error.message);
-      return null;
+
+
+export default function Home() {
+  const generarBolitas = (cantidad, tamañoMinimo, tamañoMaximo) => {
+    const bolitas = [];
+    for (let i = 0; i < cantidad; i++) {
+      const tamaño = `${Math.floor(Math.random() * (tamañoMaximo - tamañoMinimo) + tamañoMinimo)}px`;
+      const opacidad = Math.random() * (0.8 - 0.2) + 0.2; // Generar un valor aleatorio de opacidad entre 0 y 1
+      const pelotica = <Bolita key={i} size={tamaño} color={`rgba(0, 49, 77, ${opacidad})`} />;
+      const divConPelotica = <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 0 }}>{pelotica}</div>; // Centrar la pelotica dentro del div
+      bolitas.push(divConPelotica);
+      tamañoMaximo -= 3; // Reducir el tamaño máximo para la próxima iteración
     }
+    return bolitas;
+  };
+  
+
+  //Funciones para carousel
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const handlePrev = () => {
+      setCurrentSlide((prevSlide) => (prevSlide > 0 ? prevSlide - 1 : 0));
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const csrfToken = await getCsrfToken();
-
-      const response = await axios.post('/api/auth/login', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
-        }
-      });
-      console.log('Respuesta del servidor:', response.data);
-      router.push('/home');
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error.message);
-      setError('Error al iniciar sesión: ' + error.message); // Utilizar setError aquí
-    }
+  const handleNext = () => {
+      setCurrentSlide((prevSlide) => (prevSlide < 2 ? prevSlide + 1 : 2)); // Asumiendo 3 elementos en el carrusel
   };
+
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-white">
-      <div className="w-full h-full flex justify-between items-center">
-        <div className="xl:w-1/2 h-full flex justify-center items-center sm:w-full">
-          <div className="xl:w-1/2 p-5 sm:">
-          <div className="flex items-center">
+    <main className={`flex min-h-screen flex-col  overflow-hidden items-end lg:items-center bg-white `}>
+      {/* navBar */}
+      <div className="lg:container flex justify-between lg:max-w-5xl m-2 lg:m-6 px-4 sm:px-6 lg:px-8 2xl:px-6 bg-darkBlue rounded-full p-2.5 fixed z-50">
+        <div className="hidden flex-col sm:flex-row lg:flex">
+          <Image src={logowhite} alt="logo" width={38} className="mr-1 " />
           <div>
-              <Image src={logo} alt="logo"  className="w-11 h-auto"></Image>
-          </div>
-          <div className="flex flex-col px-2 text-custom-blue">
-                <h1 className="text-3xl font-medium ">Hermes</h1>
-                <p className="text-[13px] font-light">
-                Transformando vidas, construyendo futuro.
-                </p>
-              </div>
-          </div>
-            <div className="text-custom-blue pt-10">
-              <h1 className="text-3xl">Inicia Sesión</h1>
-              <p className="text-base pt-5">
-              ¡Bienvenido de vuelta! Por favor, inicia sesión para acceder a tu cuenta.
-              </p>
-            </div>
-            
-
-            {error && (
-              <div className="text-red-500 mt-4">
-                {error}
-              </div>
-            )}
-
-            <div className="mt-10">
-              <form onSubmit={handleLogin}>
-                <div className="flex flex-col items-center">
-                  <div className="flex items-center w-full mt-4 rounded border-solid border-2">
-                    <HiMiniIdentification className="w-5 mr-2 mx-3 h-5 text-gray-500" />
-                    <select
-                      name="documentType"
-                      value={formData.documentType}
-                      onChange={handleChange}
-                      className="outline-none text-sm w-full h-9  mr-10 "
-                    >
-                      <option value="">Tipo de documento</option>
-                      <option value="CC">Cédula de Ciudadania</option>
-                      <option value="TI">Tarjeta de Identidad</option>
-                      <option value="CE">Cédula Extranjería</option>
-                      <option value="PP">Pasaporte</option>
-                      <option value="PEP">Permiso Especial de Permanencia</option>
-                      <option value="PPT">Permiso de Protección Temporal</option>
-                    </select>
-                  </div>
-
-                  <div className="flex items-center w-full mt-4 rounded border-solid border-2 text-custom-blue">
-                    <BsPersonCircle className="w-5 mr-2 mx-3 h-5 text-gray-500" />
-                    <input 
-                      value={formData.documentNumber} 
-                      type="text" 
-                      name="documentNumber" 
-                      placeholder='Documento' 
-                      className='outline-none text-sm w-full h-9 text-custom-blue'
-                      onChange={handleChange}
-                    />
-                  </div> 
-
-                  <div className="flex items-center w-full mt-4 rounded border-solid border-2">
-                 
-<input 
-                      value={formData.password} 
-                      type="password" 
-                      name="password" 
-                      placeholder='Contraseña' 
-                      className='outline-none text-sm w-full h-9 text-custom-blue'
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-between mt-4 items-center text-custom-blue">
-                  <div className="flex text-center">
-                    <input type="checkbox" className='mr-2'/>
-                    <label htmlFor="" className='text-xs'>Recordar</label>
-                  </div>
-                  <div className="text-xs">
-                    <Link href="">
-                      <p className='hover:text-custom-blues' onClick={handleOpenModal}>¿Olvidó su contraseña?</p>
-                    </Link>
-                   
-                  </div>
-                </div>
-
-                <button 
-                  className='bg-custom-blue w-full p-2 text-white font-medium rounded mt-20 hover:bg-custom-blues' 
-                  type='submit'
-                >
-                  Iniciar Sesion
-                </button>
-              </form>
-            </div>
+            <h3 className="text-white text-lg">Hermes</h3>
+            <p className="text-white text-sm">Transformando vidas, construyendo futuro.</p>
           </div>
         </div>
-        <div className="w-[50%] justify-center items-center bg-cover bg-center h-screen hidden xl:block" style={{ backgroundImage: "url('/Img/fondo1.jpg')"}}>
-          <div className="relative w-full h-full">
-            <div className="absolute inset-0 bg-black opacity-20"></div>
-            <div className="relative z-10 h-full flex flex-col justify-between p-10 text-center text-white">
-              <div className='flex justify-end'> 
-                <div className="w-36">
-               
-                </div>
-              </div>
-              <div>
-                <div className='flex justify-center'>
-                  <div className='rounded-md relative' style={{ backgroundColor: 'rgba(0, 0, 0, 0.0)' }}>
-                    <p className='text-xl text-left px-4 py-4'>
-                      ¡Únete a la comunidad educativa del SENA y <br />
-                      potencia tu futuro! Regístrate ahora para <br />
-                      acceder a una amplia gama de programas de <br />
-                      formación y oportunidades de crecimiento <br />
-                      profesional.
-                    </p>
-                  </div>
-                </div>
-                <div className='flex items-center justify-end'>
-                  <div>
-                    <span className='text-xs'>Potenciando la asistencia </span>
-                  </div>
-                </div>
-              </div>
-            </div>     
-          </div>   
-        </div>  
+        <div className="container max-w-xl flex items-center lg:justify-between justify-end px-6">
+        <ScrollLink to="Inicio" spy={true} smooth={true} offset={-70} duration={500} className="lg:text-base hidden lg:block text-white hover:text-green" style={{ cursor: 'pointer' }} > Inicio </ScrollLink>
+        <ScrollLink to="Alcance" spy={true} smooth={true} offset={-70} duration={500} className="lg:text-base hidden lg:block text-white hover:text-green" style={{ cursor: 'pointer' }} > Alcance </ScrollLink>
+        <ScrollLink to="Hermes" spy={true} smooth={true} offset={-70} duration={500} className="lg:text-base hidden lg:block text-white hover:text-green" style={{ cursor: 'pointer' }} > Hermes </ScrollLink>
+        <ScrollLink to="Fabrica" spy={true} smooth={true} offset={-70} duration={500} className="lg:text-base hidden lg:block text-white hover:text-green" style={{ cursor: 'pointer' }} > Fabrica de Software </ScrollLink>
+          <Link href="/login" className="font-thin text-base/[15px] lg:text-base text-white hover:text-green">Ingresar</Link>
+          <Image src={logowhite} alt="logowhite" width={18} className="ml-2 lg:hidden " />
+        </div>
       </div>
-    </div>
+
+      {/* Primera Sección */}
+      <div id="Inicio" className="w-full min-h-60 flex justify-between">
+        <div id="seccion1" className="container w-full lg:w-8/12  ">
+          <div className="h-1/6 lg:h-1/4 w-full flex " style={{ margin: "-20px" }}>
+            {/* Primer conjunto de bolitas */}
+            {[...Array(3)].map((_, index) => (
+              <div key={index}>
+                {generarBolitas(10, 5, 40)}
+              </div>
+            ))}
+            {/* Segundo conjunto de bolitas */}
+            {[...Array(11)].map((_, index) => (
+              <div key={index}>
+                {generarBolitas(5, 5, 40)}
+              </div>
+            ))}
+            {/* Tercer conjunto de bolitas */}
+            {[...Array(5)].map((_, index) => (
+              <div key={index}>
+                {generarBolitas(12, 5, 40)}
+              </div>
+            ))}
+          </div>
+
+          <div className="h-3/4 w-full flex lg:items-center items-end justify-center">
+            <div className="w-4/5 lg:w-2/4 flex flex-col justify-center items-end lg:items-start">
+              <div className="flex flex-col sm:flex-row lg:w-3/4 w-2/4 items-end">
+                <Image src={logo} alt="logo" width={38} className="mr-1 " />
+                <div className="flex flex-col items-end lg:items-start">
+                  <h3 className="text-darkBlue font-bold lg:text-4xl ">Hermes</h3>
+                  <p className="text-darkBlue text-sm text-end">Transformando vidas, construyendo futuro.</p>
+                </div>
+              </div>
+
+              <div className="w-full">
+                <h1 className="text-darkBlue lg:text-3xl text-end lg:text-start  my-6">¡Hola y bienvenido!</h1>
+                <p className="text-darkBlue lg:text-lg text-end lg:text-start ">En Hermes, te brindamos acceso rápido y sencillo a la información que necesitas para comenzar tu formación en uno de los centros educativos más importantes del país.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          style={{
+            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0),rgba(255, 255, 255, 0),rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 1)), url('/img/imagenBackground.png')`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover', // Ajusta el tamaño de la imagen para que cubra el div
+            backgroundPosition: 'center', // Centra la imagen dentro del div
+            width:'100%'
+          }}
+          className="container hidden lg:block lg:w-6/12"
+        >
+        </div>
+
+      </div>
+
+      {/* Segunda Seccion */}
+      <div id="Alcance" className="lg:min-w-full w-4/4 min-h-64 flex flex-col items-center my-6 animate-fade-in-up z-1">
+        <h1 className="text-darkBlue font-bold text-xl text-center w-3/4">Funciones a tu alcance: ¡Descubre qué puedes hacer!</h1>
+        <div className="flex flex-col lg:flex-row lg:w-3/4 lg:m-10 items-center justify-between">
+          <div className="w-72 border border-b-slate-950 shadow-xl p-4 m-4 h-72 p-5 flex flex-col items-center justify-evenly">
+            <FontAwesomeIcon icon={faCircleCheck} className="text-darkBlue w-10 h-10" />
+            <h2 className="text-darkBlue text-center m-3 w-40 font-bold">Descubre quienes somos</h2>
+            <p className="text-darkBlue text-xs text-center">Ofrecemos programas de formación técnica y tecnológica para potenciar tus habilidades y abrirte nuevas oportunidades laborales. ¡Únete a nosotros y construye tu futuro hoy mibaseo!</p>
+          </div>
+          <div className="w-72 border border-b-slate-950 shadow-xl p-4 m-4 h-72 p-5 flex flex-col items-center justify-evenly">
+            <FontAwesomeIcon icon={faCircleCheck} className="text-darkBlue w-10 h-10" />
+            <h2 className="text-darkBlue text-center m-3 w-40 font-bold">Centros por Ubicación</h2>
+            <p className="text-darkBlue text-xs text-center">Encuentra centros del Sena cerca de ti. Explora nuestra red nacional de centros de formación y accede a oportunidades educativas en tu área local.</p>
+          </div>
+          <div className="w-72 border border-b-slate-950 shadow-xl p-4 m-4 h-72 p-5 flex flex-col items-center justify-evenly">
+            <FontAwesomeIcon icon={faLocationDot} className="text-darkBlue w-10 h-10" />
+            <h2 className="text-darkBlue text-center m-3 w-40 font-bold">Categorías de cursos</h2>
+            <p className="text-darkBlue text-xs text-center">Explora nuestros centros del Sena organizados por categorías de cursos, para que puedas encontrar fácilmente la formación que se adapte a tus intereses y objetivos profesionales.</p>
+          </div>
+        </div>
+        <div>
+
+        </div>
+      </div>
+
+      {/* Tercera Seccion */}
+      <div id="Hermes" className="lg:min-w-full lg:max-h-[37rem] flex items-center justify-center bg-darkBlue overflow-hidden">
+            {/* <MapContainer   /> Mapa del las macroregiones del SENA */} 
+
+            <div className="w-full lg:w-7/12 max-h-80 flex items-center justify-end my-8 lg:mt-16 py-32">
+                <div className="w-11/12 lg:w-8/12 flex flex-col gap-11">
+                  <h1 className="text-base lg:text-2xl font-bold text-white">¡Descarga nuestra Aplicación Móvil!</h1>
+                  <p className="w-9/12 text-xs lg:text-lg text-white">¡Bienvenido al futuro de la educación! En Hermes, nos enorgullece presentarte nuestra innovadora aplicación móvil diseñada para simplificar tu experiencia al acceder a las sedes del Servicio Nacional de Aprendizaje (SENA). Con nuestra aplicación, encontrar y navegar por las sedes del SENA nunca ha sido más fácil y conveniente.</p>
+                  <button className="text-xs lg:text-lg w-4/12 lg:w-3/12 py-2 bg-green rounded-xl"> Descargar </button>
+                </div>
+            </div>
+
+            <div className="hidden w-[49rem] bg-white h-[49rem] rounded-full mt-64 lg:flex items-center" style={{ marginRight: "-13rem", marginBottom: '-3rem', boxShadow: "0 -25px 1px 15px rgba(255, 255, 250, 0.2)" }}>
+              <div id="controles" className="w-2/12 h-96 flex flex-col gap-3 justify-end" style={{ marginTop: '-8rem' }}>
+                    <div className={`bolita ${currentSlide === 0 ? 'active' : ''} `} onClick={() => setCurrentSlide(0)} style={{ marginLeft: '1.2rem', boxShadow: "0 3px 6px 2px rgba(200, 200, 200, 1)" }}></div>
+                    <div className={`bolita ${currentSlide === 1 ? 'active' : ''} `} onClick={() => setCurrentSlide(1)} style={{ marginLeft: '2rem', boxShadow: "0 3px 6px 2px rgba(200, 200, 200, 1)" }}></div>
+                    <div className={`bolita ${currentSlide === 2 ? 'active' : ''} `} onClick={() => setCurrentSlide(2)} style={{ marginLeft: '2.8rem', boxShadow: "0 3px 6px 2px rgba(200, 200, 200, 1)" }}></div>
+              </div>
+              <div id="movil" className="w-10/12 h-96" style={{ marginTop: '-10rem' }}>
+                <div>
+                  <Carousel showThumbs={false} showStatus={false} showIndicators={false} selectedItem={currentSlide}>
+                      <div className="h-[32rem] w-9/12">
+                        <Image src={imgMobile1} alt="Imagen Movil 1" style={{width: '220px'}} className=" lg:hidden" />
+                      </div>
+                      <div className="h-[32rem] w-9/12">
+                        <Image src={imgMobile2} alt="Imagen Movil 2" style={{width: '200px'}} className=" lg:hidden" />
+                      </div>
+                      <div className="h-[32rem] w-9/12">
+                        <Image src={imgMobile3} alt="Imagen Movil 3" style={{width: '200px'}} className=" lg:hidden" />
+                      </div>
+                    </Carousel>
+                </div>
+              </div>
+            </div>
+
+
+      </div>
+
+      {/* Cuarta Seccion */}
+      <div id="Fabrica" className="lg:min-w-full lg:min-h-3/4 flex items-center justify-center my-20">
+        <div className="hidden w-6/12 lg:flex items-center justify-center">
+          <div className="w-[29rem] h-[29rem] rounded-full" 
+          style={{ boxShadow: "0 25px 1px 15px rgba(0, 49, 77, 0.2)", 
+            backgroundImage: `url('/img/fabrica.jpeg')`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover', // Ajusta el tamaño de la imagen para que cubra el div
+            backgroundPosition: 'center' // Centra la imagen dentro del div
+          }}></div>
+        </div>
+        <div className="w-10/12 lg:w-6/12 lg:min-h-80 flex flex-col justify-center gap-10 lg:gap-20">
+          <h1 className="text-base lg:text-xl font-bold text-darkBlue font-bold">Equipo de Desarrollo: Centro de Servicios Financieros</h1>
+          <p className="w-10/12 lg:w-8/12 text-xs lg:text-lg text-darkBlue font-medium">Nuestro equipo de desarrollo es el núcleo dinámico y altamente especializado que impulsa la innovación y la excelencia en el ámbito de los servicios financieros. En nuestra fábrica de software, nos dedicamos exclusivamente a atender las necesidades tecnológicas de las instituciones financieras, ofreciendo soluciones personalizadas y de vanguardia que optimizan sus procesos y mejoran su rendimiento.</p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-darkBlue text-white p-6 w-screen">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row justify-between">
+            {/* Columna 1 */}
+            <div className="w-full md:w-1/3 p-4 text-center md:text-left">
+              <p>Inicio</p>
+              <p>Servicios</p>
+              <p>Acerca de nosotros</p>
+              <p>Contacto</p>
+            </div>
+
+            {/* Columna 2 */}
+            <div className="w-full md:w-1/3 p-4 text-center">
+              <div className="flex justify-center gap-10">
+                <div><FaTwitter /></div>
+                <div><FaTiktok /></div>
+                <div><FaFacebook /></div>
+              </div>
+            </div>
+
+            {/* Columna 3 */}
+            <div className="w-full md:w-1/3 p-4 text-center md:text-right">
+              <div>
+                <h3 className="text-lg">Hermes</h3>
+                <p className="text-sm">Transformando vidas, construyendo futuro.</p>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <p className="text-center">© 2024 Hermes. Todos los derechos reservados.</p>
+        </div>
+      </footer>
+
+    </main>
   );
 }

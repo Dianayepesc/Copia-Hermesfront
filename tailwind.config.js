@@ -15,7 +15,12 @@ module.exports = {
       colors: {
         'custom-blue': '#00324D',
         'custom-blues': '#39A900',
-        'sena-red': '#dc2626'
+        'sena-red': '#dc2626',
+        'narvy-blue': 'rgba(0, 95, 139, 0.5)',
+        'darkBlue' : '#00314D',
+        'Rblue': '#00314D',
+        'Rblue-Trs': 'rgba(0, 49, 77, 0.4)',
+        'green' : '#39A906',
       },
     },
   },

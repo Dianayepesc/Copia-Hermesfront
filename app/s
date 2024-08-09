@@ -1,4 +1,74 @@
-<svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 4.5C0 3.25736 1.23122 2.25 2.75 2.25H19.25C20.7688 2.25 22 3.25736 22 4.5V13.5C22 14.7426 20.7688 15.75 19.25 15.75H2.75C1.23122 15.75 0 14.7426 0 13.5V4.5ZM12.375 6.1875C12.375 6.49816 12.6828 6.75 13.0625 6.75H18.5625C18.9422 6.75 19.25 6.49816 19.25 6.1875C19.25 5.87684 18.9422 5.625 18.5625 5.625H13.0625C12.6828 5.625 12.375 5.87684 12.375 6.1875ZM12.375 9C12.375 9.31066 12.6828 9.5625 13.0625 9.5625H18.5625C18.9422 9.5625 19.25 9.31066 19.25 9C19.25 8.68934 18.9422 8.4375 18.5625 8.4375H13.0625C12.6828 8.4375 12.375 8.68934 12.375 9ZM13.75 11.8125C13.75 12.1232 14.0578 12.375 14.4375 12.375H18.5625C18.9422 12.375 19.25 12.1232 19.25 11.8125C19.25 11.5018 18.9422 11.25 18.5625 11.25H14.4375C14.0578 11.25 13.75 11.5018 13.75 11.8125ZM12.375 14.0625C12.375 11.8879 9.91255 10.125 6.87498 10.125C4.0063 10.125 1.65058 11.6973 1.39749 13.7038C1.51471 14.2278 2.07566 14.625 2.74998 14.625H12.3193C12.356 14.4413 12.375 14.2535 12.375 14.0625ZM9.62498 6.75C9.62498 5.50736 8.39376 4.5 6.87498 4.5C5.3562 4.5 4.12498 5.50736 4.12498 6.75C4.12498 7.99264 5.3562 9 6.87498 9C8.39376 9 9.62498 7.99264 9.62498 6.75Z" fill="#899DA8"/>
-</svg>
-    
+                  <form onSubmit={auth} >
+                      <div className="flex flex-col items-center">
+                      
+                        <div className="flex items-center w-full rounded border-solid border-2 border-Rblue-Trs">
+                          <FontAwesomeIcon icon={faEnvelope} className="text-Rblue-Trs w-5 mr-2 mx-3" />
+                          <input type="text" name="email" placeholder='Correo Electronico' className='outline-none text-sm w-full h-9  text-Rblue' />
+                        </div>  
+
+                        <div className=" flex items-center w-full mt-4 rounded border-solid border-2 border-Rblue-Trs">
+                          <FontAwesomeIcon icon={faLock} className="text-Rblue-Trs w-4 mr-2 mx-3" />
+                          <input type="password" name="password" placeholder='Contraseña' className='outline-none text-sm w-full h-9 text-Rblue' />
+                        </div>
+                      </div>
+                      <div className="flex justify-between mt-4 items-center">
+                        <div className="flex text-center	">
+                          <input type="checkbox" className='bg-Rblue-Trs mr-2'/>
+                          <label htmlFor="" className='text-xs text-Rblue'>Recordar</label>
+                          
+                        </div>
+                        <div className="text-Rblue text-xs">
+                          <Link href="">
+                            <p>¿Olvido su contraseña?</p>
+                          </Link>
+                        </div>
+                      </div>
+
+                      <button className='bg-Rblue w-full p-2 text-white font-medium rounded mt-20 hover:bg-green-600' type='submit'>Iniciar Sesion</button>
+                    </form>
+
+        <form onSubmit={handleLogin}>
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center w-full mt-4 rounded border-solid border-2">
+                    <HiMiniIdentification className="w-5 mr-2 mx-3 h-5 text-gray-500" />
+                    <select
+                      name="documentType"
+                      value={formData.documentType}
+                      placeholder='Documento' 
+                      className='outline-none text-sm w-full h-9 text-custom-blue'
+                      onChange={handleChange}
+                    />
+                  </div> 
+
+                  <div className="flex items-center w-full mt-4 rounded border-solid border-2">
+                 
+<input 
+                      value={formData.password} 
+                      type="password" 
+                      name="password" 
+                      placeholder='Contraseña' 
+                      className='outline-none text-sm w-full h-9 text-custom-blue'
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-between mt-4 items-center text-custom-blue">
+                  <div className="flex text-center">
+                    <input type="checkbox" className='mr-2'/>
+                    <label htmlFor="" className='text-xs'>Recordar</label>
+                  </div>
+                  <div className="text-xs">
+                    <Link href="">
+                      <p className='hover:text-custom-blues' onClick={handleOpenModal}>¿Olvidó su contraseña?</p>
+                    </Link>
+                   
+                  </div>
+                </div>
+
+                <button 
+                  className='bg-custom-blue w-full p-2 text-white font-medium rounded mt-20 hover:bg-custom-blues' 
+                  type='submit'
+                >
+                  Iniciar Sesion
+                </button>
+              </form>

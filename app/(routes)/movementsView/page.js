@@ -12,7 +12,7 @@ export default function movementsView() {
         <div className="xl:col-span-5">
           <Header />
           <div>
-            <h2>Movimientos de entrada y salida </h2>
+            <h2>Movimientos de entrada y salida. </h2>
           </div>
           
           <div class="flex justify-center items-center min-h-screen">
@@ -21,7 +21,7 @@ export default function movementsView() {
                     <thead class="text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
                       <tr>
                         <th scope="col" class="px-6 py-3">Nombre</th>
-                        <th scope="col" class="px-6 py-3">Apellido</th>
+                        <th scope="col" class="px-6 py-3">Apellid</th>
                         <th scope="col" class="px-6 py-3">Cargo</th>
                         <th scope="col" class="px-6 py-3">Tipo de documento</th>
                         <th scope="col" class="px-6 py-3">Numero de documento</th>
